@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ONIXMessage release="3.0">
+    <Header>
+        <Sender>
+            <SenderName>
+                {{- get_parameter(header, "sender_name", "PERLEGO") -}}
+            </SenderName>
+            <ContactName>
+                {{- get_parameter(header, "contact_name", "ANNA LAURA FEST") -}}
+            </ContactName>
+            <EmailAddress>
+                {{- get_parameter(header, "email_address", "alf@perlego.com") -}}
+            </EmailAddress>
+        </Sender>
+        <Addressee>
+            <AddresseeName>{{- get_parameter(header, "addressee_name", "To be Defined") -}}</AddresseeName>
+        </Addressee>
+        <MessageNumber>{{- get_parameter(header, "message_number", "1") -}}</MessageNumber>
+        <SentDateTime>{{- get_parameter(header, "sent_date_time", "") -}}</SentDateTime>
+    </Header>
+    <Product>
+        <RecordReference>{{- get_parameter(product, "record_reference", "") -}}</RecordReference>
+        <NotificationType>{{- get_parameter(product, "notification_type", "03") -}}</NotificationType>
+        <ProductIdentifier>
+            <ProductIDType>{{- get_parameter(product, "product_id_type", "15") -}}</ProductIDType>
+            <IDValue>{{- get_parameter(product, "product_id_value", "") -}}</IDValue>
+        </ProductIdentifier>
+        <DescriptiveDetail>
+            <ProductComposition>{{- get_parameter(product, "product_composition", "00") -}}</ProductComposition>
+            <ProductForm>{{- get_parameter(product, "product_form", "EA") -}}</ProductForm>
+            <ProductFormDetail>{{- get_parameter(product, "product_form_detail", "E101") -}}</ProductFormDetail>
+            <EpubTechnicalProtection>{{- get_parameter(product, "epub_technical_protection", "00") -}}
+            </EpubTechnicalProtection>
+            <NoCollection/>
+            <TitleDetail>
+                <TitleType>{{- get_parameter(product, "title_type", "01") -}}</TitleType>
+                <TitleElement>
+                    <TitleElementLevel>{{- get_parameter(product, "title_element_level", "01") -}}</TitleElementLevel>
+                    <TitleText>{{- get_parameter(product, "title_text", "") -}}</TitleText>
+                    <Subtitle>{{- get_parameter(product, "subtitle", "") -}}</Subtitle>
+                </TitleElement>
+            </TitleDetail>
+            {% for contributor in product.descriptive_detail.contributors %}
+            <Contributor>
+                <SequenceNumber>{{- contributor.sequence_number -}}</SequenceNumber>
+                <ContributorRole>{{- contributor.contributor_role -}}</ContributorRole>
+                <PersonName>{{- contributor.person_name -}}</PersonName>
+            </Contributor>
+            {% endfor %}
+            <NoEdition/>
+            <Language>
+                <LanguageRole>{{- get_parameter(product, "language_role", "01") -}}</LanguageRole>
+                <LanguageCode>{{- get_parameter(product, "language_code", "") -}}</LanguageCode>
+            </Language>
+            <Subject>
+                <MainSubject/>
+                <SubjectSchemeIdentifier>{{- get_parameter(product, "subject_scheme_identifier", "10") -}}
+                </SubjectSchemeIdentifier>
+                <SubjectCode>{{- get_parameter(product, "subject_code", "") -}}</SubjectCode>
+            </Subject>
+        </DescriptiveDetail>
+        <CollateralDetail>
+            <TextContent>
+                <TextType>{{- get_parameter(product, "text_content_text_type", "03") -}}</TextType>
+                <ContentAudience>{{- get_parameter(product, "content_audience", "00") -}}</ContentAudience>
+                <Text>
+                   {% set text_content = get_parameter(product, "text_content_text", "") %}
+                   {%- if text_content != "" -%}
+                       <![CDATA[<p> {{- text_content -}} </p>]]>
+                   {%- endif %}
+                </Text>
+            </TextContent>
+        </CollateralDetail>
+        <PublishingDetail>
+            <Imprint>
+                <ImprintName>{{- get_parameter(product, "imprint_name", "") -}}</ImprintName>
+            </Imprint>
+            <Publisher>
+                <PublishingRole>{{- get_parameter(product, "publishing_role", "01") -}}</PublishingRole>
+                <PublisherName>{{- get_parameter(product, "publisher_name", "") -}}</PublisherName>
+            </Publisher>
+            <PublishingDate>
+                <PublishingDateRole>{{- get_parameter(product, "publishing_date_role", "01") -}}</PublishingDateRole>
+                <Date dateformat="00">{{- get_parameter(product, "publishing_date_date", "") -}}</Date>
+            </PublishingDate>
+            <SalesRights>
+                <SalesRightsType>{{- get_parameter(product, "sales_rights_type", "01") -}}</SalesRightsType>
+                <Territory>
+                    <CountriesIncluded>{{- get_parameter(product, "countries_included", "") -}}</CountriesIncluded>
+                </Territory>
+            </SalesRights>
+        </PublishingDetail>
+        <RelatedMaterial>
+            <RelatedProduct>
+                <ProductRelationCode>{{- get_parameter(product, "product_relation_code", "13") -}}</ProductRelationCode>
+                <ProductIdentifier>
+                    <ProductIDType>{{- get_parameter(product, "related_product_id_type", "15") -}}</ProductIDType>
+                    <IDValue>{{- get_parameter(product, "related_product_id_value", "") -}}</IDValue>
+                </ProductIdentifier>
+            </RelatedProduct>
+        </RelatedMaterial>
+        <ProductSupply>
+            <SupplyDetail>
+                <Supplier>
+                    <SupplierRole>{{- get_parameter(product, "supplier_role", "00") -}}</SupplierRole>
+                    <SupplierName>{{- get_parameter(product, "supplier_name", "") -}}</SupplierName>
+                </Supplier>
+                <ProductAvailability>{{- get_parameter(product, "product_availability", "20") -}}
+                </ProductAvailability>
+                <Price>
+                    <PriceType>{{- get_parameter(product, "price_type", "01") -}}</PriceType>
+                    <PriceAmount>{{- get_parameter(product, "price_amount", "") -}}</PriceAmount>
+                    <CurrencyCode>{{- get_parameter(product, "currency_code", "") -}}</CurrencyCode>
+                </Price>
+            </SupplyDetail>
+        </ProductSupply>
+    </Product>
+</ONIXMessage>
