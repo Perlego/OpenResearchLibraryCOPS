@@ -37,7 +37,6 @@
                 <TitleElement>
                     <TitleElementLevel>{{- get_parameter(product, "title_element_level", "01") -}}</TitleElementLevel>
                     <TitleText>{{- get_parameter(product, "title_text", "") -}}</TitleText>
-                    <Subtitle>{{- get_parameter(product, "subtitle", "") -}}</Subtitle>
                 </TitleElement>
             </TitleDetail>
             {% for contributor in product.descriptive_detail.contributors %}
@@ -72,9 +71,6 @@
             </TextContent>
         </CollateralDetail>
         <PublishingDetail>
-            <Imprint>
-                <ImprintName>{{- get_parameter(product, "imprint_name", "") -}}</ImprintName>
-            </Imprint>
             <Publisher>
                 <PublishingRole>{{- get_parameter(product, "publishing_role", "01") -}}</PublishingRole>
                 <PublisherName>{{- get_parameter(product, "publisher_name", "") -}}</PublisherName>
@@ -90,15 +86,6 @@
                 </Territory>
             </SalesRights>
         </PublishingDetail>
-        <RelatedMaterial>
-            <RelatedProduct>
-                <ProductRelationCode>{{- get_parameter(product, "product_relation_code", "13") -}}</ProductRelationCode>
-                <ProductIdentifier>
-                    <ProductIDType>{{- get_parameter(product, "related_product_id_type", "15") -}}</ProductIDType>
-                    <IDValue>{{- get_parameter(product, "related_product_id_value", "") -}}</IDValue>
-                </ProductIdentifier>
-            </RelatedProduct>
-        </RelatedMaterial>
         <ProductSupply>
             <SupplyDetail>
                 <Supplier>

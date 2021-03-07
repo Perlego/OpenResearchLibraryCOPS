@@ -1,2 +1,46 @@
 ONIX_DATE_FORMAT = "%Y%m%d"
-TEMPLATE_FILE = "data/metadata_template.j2"
+TEMPLATE_FILE = "metadata_template.j2"
+LOCAL_DIR = "tmp"
+LANGUAGE_REFERENCE = {"English": "1",
+                      "En": "1",
+                      "German": "2",
+                      "Italian": "3",
+                      "French": "4",
+                      "Spanish": "5",
+                      "Afrikaans": "18",
+                      "Albanian": "22",
+                      "Arabic": "30",
+                      "Chinese": "88",
+                      "Danish": "113",
+                      "Finnish": "114",
+                      "Greek, Modern (1453-)": "176",
+                      "Hebrew": "185",
+                      "Hindi": "189",
+                      "Croatian": "193",
+                      "Japanese": "217",
+                      "Portugese": "365",
+                      "Dutch": "126",
+                      "Kinyarwanda": "238",
+                      "Norwegian": "330",
+                      "Polish": "363",
+                      "Portuguese": "365",
+                      "Russian": "383",
+                      "Slovak": "407",
+                      "Slovenian": "408",
+                      "Swedish": "435",
+                      "Tamil": "440",
+                      "Welsh": "489",
+                      "Norwegian Nynorsk; Nynorsk, Norwegian": "330"
+                      }
+
+BOOK_TEMPLATE = {"isbn13": "",
+                 "title.title_text": "",
+                 "language_of_text": "",
+                 "bisacs": [],
+                 "format": "",
+                 "contributors": [],
+                 "main_description.text": "",
+                 "publisher_name": "",
+                 "publication_date": "20210101",
+                 "allowed_countries": "",
+                 "record_reference": ""}
