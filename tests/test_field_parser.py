@@ -12,7 +12,8 @@ from src.fields_parser import parse_creator, parse_date, parse_description, pars
                                                            (['Hermione Granger', 'Harry Potter'],
                                                             "Hermione Granger, Harry Potter"),
                                                            ([None, 1234, 'Harry Potter'], "Harry Potter"),
-                                                           ("Ron Weasley", "",)])
+                                                           ("Ron Weasley", "",),
+                                                           (['Reagle, Jr., Joseph M.'], "Reagle, Jr., Joseph M.")])
 def test_parse_creator(raw_creator, expected_creator):
     assert parse_creator(raw_creator) == expected_creator
 

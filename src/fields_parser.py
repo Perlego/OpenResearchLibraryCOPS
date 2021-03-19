@@ -17,6 +17,7 @@ def parse_creator(raw_creator: List[str]) -> str:
         Output: 'Harry Potter, Hermione Granger'
     """
     formatted_names = []
+    print(f"Name: {raw_creator}")
     if not isinstance(raw_creator, List):
         print(f"WARNING: Wrong input type: '{type(raw_creator)}', expected List")
         return ""
@@ -25,7 +26,7 @@ def parse_creator(raw_creator: List[str]) -> str:
         if not isinstance(creator, str):
             print(f"WARNING: non-string creator value: {creator}. Skipping...")
             continue
-        if "," in creator:
+        if "," in creator and len(creator.split(",")) == 2:
             surname, name = creator.split(",")
             formatted_names.append(f"{name.strip()} {surname.strip()}")
         else:
@@ -129,8 +130,14 @@ def parse_isbn(raw_identifier: List[str]) -> str:
     if isbn.isnumeric() and len(isbn) == 13 and isbn.startswith("97"):
         return isbn
     else:
-        print(f"WARNING: wrong ISBN: {isbn}, check that length and format")
+        # print(f"WARNING: wrong ISBN: {isbn}, check that length and format")
         return ""
+
+
+def parse_book_identifier(raw_identifier: List[str]) -> str:
+    viewer_link = [element for element in raw_identifier if "viewer" in element.lower()][0]
+    book_identifier = viewer_link.split('/')[-1]
+    return book_identifier
 
 
 def parse_download_link(raw_identifier: List[str]) -> str:
@@ -146,14 +153,8 @@ def parse_download_link(raw_identifier: List[str]) -> str:
         return ""
     links = [element for element in raw_identifier if "external_content" in element.lower()]
     if not links:
-        viewer_links = [element for element in raw_identifier if "viewer" in element.lower()]
-        if len(viewer_links) != 0:
-            # viewer link example: https://openresearchlibrary.org/viewer/90626a3e-7088-41c2-ba48-92bb633b1cb7
-            identifier = viewer_links[0].split("/")[-1]
-            download_link = f"https://openresearchlibrary.org/ext/api/media/{identifier}/assets/external_content.pdf"
-        else:
-            print(f"WARNING! Download link was not found: {raw_identifier}")
-            return ""
+        book_identifier = parse_book_identifier(raw_identifier)
+        download_link = f"https://openresearchlibrary.org/ext/api/media/{book_identifier}/assets/external_content.pdf"
     else:
         download_link = links[0]
     return download_link
@@ -171,10 +172,7 @@ def parse_language(raw_language: List[str]) -> str:
     if not raw_language or not isinstance(raw_language, List):
         print(f"WARNING: wrong language: {raw_language}")
         return ""
-    if raw_language[0] not in LANGUAGE_REFERENCE:
-        print(f"WARNING: language not found: {raw_language}")
-        return ""
-    return LANGUAGE_REFERENCE[raw_language[0]]
+    return raw_language[0]
 
 
 def parse_publisher(raw_publisher: List[str]) -> str:
@@ -231,4 +229,3 @@ def parse_subject(raw_subject: List[str]) -> List[str]:
         if subject.startswith("bisacsh"):
             bisacs.append(subject.split('bisacsh:')[-1])
     return bisacs
-

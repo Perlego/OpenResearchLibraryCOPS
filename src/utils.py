@@ -1,10 +1,96 @@
+import os
 from datetime import datetime
-from typing import Tuple
+from logging import Logger
+from typing import Tuple, List
+
+import pymysql
 
 from src.contants import ONIX_DATE_FORMAT
 
 
-def get_contributors_dict(contributors: str) -> dict:
+def execute_insert_or_update(statement: str, connection_details: dict, logger: Logger = None):
+    with initialise_connection(connection_details) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(statement)
+            row_count = cursor.rowcount
+            last_row_id = cursor.lastrowid
+        connection.commit()
+    print(f"Row count: {row_count}, last row id: {last_row_id}")
+    return row_count, last_row_id
+
+
+def execute_select(statement: str, connection_details: dict, logger: Logger = None):
+    with initialise_connection(connection_details) as connection:
+        if logger:
+            logger.debug(f"Executing query: {statement}")
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            cursor.execute(statement)
+            results = cursor.fetchall()
+    return results
+
+
+def initialise_connection(connection_details: dict):
+    """
+    Create a connection to MySQL database instance
+    Args:
+        connection_details: dictionary, required fields: host, username, password, dbname
+    Returns:
+        connection
+    Raises:
+        ProgrammingError, DatabaseError if something is wrong with connection details
+    """
+    cnx = pymysql.connect(
+        host=connection_details["host"],
+        user=connection_details["username"],
+        password=connection_details["password"],
+        database=connection_details["dbname"],
+    )
+    return cnx
+
+
+def upload_object_by_path(s3, bucket_name: str, local_path: str, s3_path: str) -> None:
+    """
+    Upload local file to AWS S3 Bucket
+    Args:
+        s3: instance of boto3.resource
+        bucket_name: name of the destination bucket
+        s3_path: bucket destination file + destination file name
+        local_path: path to local file to upload
+    Returns:
+        None
+    Raises:
+        FileUploadFailed: general exception in case of problems with file uploading
+    """
+    try:
+        bucket = s3.Bucket(bucket_name)
+        bucket.upload_file(Filename=local_path, Key=s3_path)
+    except Exception as e:
+        err_msg = f"Failed to upload file: '{s3_path}' to bucket '{bucket_name}'.\nDetails: {str(e)}"
+        raise ValueError(err_msg)
+    print(f"File '{local_path}' was successfully uploaded to bucket '{bucket_name}/{s3_path}'")
+
+
+def delete_local_file(file_name: str) -> None:
+    """
+    Delete the given local file.
+    Args:
+        file_name: local path to the destination file
+    Returns:
+        None
+    Raises:
+        FileDeletionFailed: General exception in case of problems with local file deletion
+    """
+    try:
+        os.remove(file_name)
+        print(f"File removed from local storage: {file_name}")
+    except FileNotFoundError:
+        print(f"Unable to delete file '{file_name}': file not found")
+    except Exception as e:
+        err_msg = f"Error during the file '{file_name}' deletion\nDetails:{str(e)}"
+        raise ValueError(err_msg)
+
+
+def get_contributors_dict(contributors: str) -> List[dict]:
     """
     Args:
         contributors: string with authors, separated by comma
@@ -14,7 +100,7 @@ def get_contributors_dict(contributors: str) -> dict:
         Input: ['Harry Potter, Hermione Granger']
         Output: [{'contributor_role': 'A01', 'person_name': 'Harry Potter, Hermione Granger', 'sequence_number': '1'}]
     """
-    return [dict(contributor_role="A01", person_name=contributors, sequence_number='1')]
+    return [dict(contributor_role="A01", person_name=contributors, sequence_number="1")]
 
 
 def generate_product_reference(book_format: str, isbn: str) -> str:
@@ -89,7 +175,7 @@ def render_book(book: dict) -> Tuple[dict, dict]:  # pylint: disable=too-many-lo
 
     descriptive_detail = dict(
         title_detail=title_detail,
-        contributors=get_contributors_dict(book['contributors']),
+        contributors=get_contributors_dict(book["contributors"]),
         language=language,
         subject=subject,
         product_form_detail=product_form_code,
