@@ -2,7 +2,7 @@ from typing import List
 
 import dateutil.parser as date_parser
 
-from src.contants import ONIX_DATE_FORMAT, LANGUAGE_REFERENCE
+from src.contants import ONIX_DATE_FORMAT
 
 
 def parse_creator(raw_creator: List[str]) -> str:
