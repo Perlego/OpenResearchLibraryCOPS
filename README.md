@@ -2,5 +2,6 @@
 
 # run tests:
 `pipenv shell`
-`export PYTHONPATH=$PYTHONPATH:$PWD/shared_layer`
-`pipenv run python -m pytest tests/"`
+(first time only) `pipenv install`
+`export PYTHONPATH=$PYTHONPATH:$PWD/src`
+`pipenv run python -m pytest tests/`

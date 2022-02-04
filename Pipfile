@@ -16,6 +16,7 @@ pytz = "*"
 pytest = "*"
 python-json-logger = "*"
 mysql-connector-python = "*"
+pymysql = "*"
 
 [requires]
 python_version = "3.7"
