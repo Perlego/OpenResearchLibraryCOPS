@@ -69,10 +69,10 @@ def parse_description(raw_description: List[str]) -> str:
         or empty string in case of errors
     """
     if (
-            not isinstance(raw_description, List)
-            or not raw_description
-            or not isinstance(raw_description[0], str)
-            or len(raw_description[0]) == 0
+        not isinstance(raw_description, List)
+        or not raw_description
+        or not isinstance(raw_description[0], str)
+        or len(raw_description[0]) == 0
     ):
         print(f"WARNING: found wrong description: {raw_description}")
         return ""
@@ -118,7 +118,11 @@ def parse_isbn(raw_identifier: List[str]) -> str:
         Output:
             9780199660797
     """
-    raw_isbn = [element.split(":")[-1] for element in raw_identifier if "isbn" in element.lower()]
+    raw_isbn = [
+        element.split(":")[-1]
+        for element in raw_identifier
+        if "isbn" in element.lower()
+    ]
     if len(raw_isbn) == 0:
         print(f"WARNING: ISBN not found in input: {raw_identifier}")
         return ""
@@ -135,8 +139,10 @@ def parse_isbn(raw_identifier: List[str]) -> str:
 
 
 def parse_book_identifier(raw_identifier: List[str]) -> str:
-    viewer_link = [element for element in raw_identifier if "viewer" in element.lower()][0]
-    book_identifier = viewer_link.split('/')[-1]
+    viewer_link = [
+        element for element in raw_identifier if "viewer" in element.lower()
+    ][0]
+    book_identifier = viewer_link.split("/")[-1]
     return book_identifier
 
 
@@ -151,7 +157,9 @@ def parse_download_link(raw_identifier: List[str]) -> str:
     if not raw_identifier or not isinstance(raw_identifier, List):
         print(f"WARNING: wrong identifier: {raw_identifier}")
         return ""
-    links = [element for element in raw_identifier if "external_content" in element.lower()]
+    links = [
+        element for element in raw_identifier if "external_content" in element.lower()
+    ]
     if not links:
         book_identifier = parse_book_identifier(raw_identifier)
         download_link = f"https://openresearchlibrary.org/ext/api/media/{book_identifier}/assets/external_content.pdf"
@@ -227,5 +235,5 @@ def parse_subject(raw_subject: List[str]) -> List[str]:
     bisacs = []
     for subject in raw_subject:
         if subject.startswith("bisacsh"):
-            bisacs.append(subject.split('bisacsh:')[-1])
+            bisacs.append(subject.split("bisacsh:")[-1])
     return bisacs

@@ -22,7 +22,12 @@ from src.fields_parser import (
     parse_download_link,
     parse_book_identifier,
 )
-from src.utils import generate_product_reference, get_parameter, upload_object_by_path, delete_local_file
+from src.utils import (
+    generate_product_reference,
+    get_parameter,
+    upload_object_by_path,
+    delete_local_file,
+)
 
 file_dir = os.path.dirname(__file__)
 sys.path.append(file_dir)
@@ -33,7 +38,9 @@ def parse_metadata_record(metadata: dict) -> dict:
     book["isbn13"] = parse_isbn(metadata["identifier"])
     book["title.title_text"] = parse_title(metadata["title"])
     book["language_of_text"] = parse_language(metadata["language"])
-    book["bisacs"] = parse_subject(metadata["subject"]) if "subject" in metadata else [""]
+    book["bisacs"] = (
+        parse_subject(metadata["subject"]) if "subject" in metadata else [""]
+    )
     book["format"] = parse_format(metadata["format"])
 
     if "creator" in metadata:
@@ -44,11 +51,15 @@ def parse_metadata_record(metadata: dict) -> dict:
         author = ""
     book["contributors"] = author
 
-    book["main_description.text"] = parse_description(metadata["description"]) if "description" in metadata else ""
+    book["main_description.text"] = (
+        parse_description(metadata["description"]) if "description" in metadata else ""
+    )
     book["publisher_name"] = parse_publisher(metadata["publisher"])
     book["publication_date"] = parse_date(metadata["date"])
     book["allowed_countries"] = "WORLD"
-    book["record_reference"] = generate_product_reference(book["format"], book["isbn13"])
+    book["record_reference"] = generate_product_reference(
+        book["format"], book["isbn13"]
+    )
     return book
 
 
@@ -64,14 +75,18 @@ def render_template(book: dict) -> str:
     template_loader = jinja2.FileSystemLoader(searchpath=path)
     env = jinja2.Environment(loader=template_loader)
     template = env.get_template(TEMPLATE_FILE)
-    env.globals["get_parameter"] = get_parameter  # map utility function from utils/ to get parameter from nested dict
+    env.globals[
+        "get_parameter"
+    ] = get_parameter  # map utility function from utils/ to get parameter from nested dict
 
     header, product = utils.render_book(book)  # call matching excel and onix fields
     output_text = template.render(header=header, product=product)
     output_file_name = f"{LOCAL_DIR}/{book['isbn13']}.xml"
     with open(output_file_name, "w") as output_file:
         output_file.write(output_text)
-    print(f"Metadata file {book['isbn13']}.xml was successfully downloaded to {output_file_name}")
+    print(
+        f"Metadata file {book['isbn13']}.xml was successfully downloaded to {output_file_name}"
+    )
     return output_file_name
 
 
@@ -175,7 +190,9 @@ def process_books_from_file():
     """
     Read all records from file and parse them one by one, getting metadata, book and cover for every record
     """
-    with open("/home/aviaowl/PycharmProjects/OpenResearchLibraryCOPS/src/output_right.csv") as output:
+    with open(
+        "/home/aviaowl/PycharmProjects/OpenResearchLibraryCOPS/src/output_right.csv"
+    ) as output:
         lines = output.readlines()
 
     prod = boto3.session.Session(profile_name="prod")
