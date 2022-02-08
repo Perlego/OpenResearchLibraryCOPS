@@ -20,7 +20,7 @@ if __name__ == '__main__':
     for line in lines:
         line = line.strip()
         record = ast.literal_eval(line)
-        isbn = parse_isbne(record["identifier"])
+        isbn = parse_isbn(record["identifier"])
         language = parse_language(record["language"])
         originals[isbn] = {'language': language}
 
