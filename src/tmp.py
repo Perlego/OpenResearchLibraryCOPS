@@ -4,13 +4,14 @@ from pprint import pprint
 from src.contants import PROCESSED_IDS
 from src.fields_parser import parse_isbn, parse_language
 from src.utils import execute_select, execute_insert_or_update
+from config import HOST_URL, USERNAME, PASSWORD, DB_NAME
 
 if __name__ == "__main__":
     connection_details = dict(
-        host="perlego-prod-db-aurora-cluster.cluster-cewnsnxsdb0o.eu-west-2.rds.amazonaws.com",
-        username="g9bgtldbq6kc9oa2",
-        password="354mznlfz4jwuacr",
-        dbname="perlego_prod_db",
+        host=HOST_URL,
+        username=USERNAME,
+        password=PASSWORD,
+        dbname=DB_NAME,
     )
 
     with open(
