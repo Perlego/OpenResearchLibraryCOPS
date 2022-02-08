@@ -4,13 +4,14 @@ from pprint import pprint
 from src.contants import PROCESSED_IDS
 from src.fields_parser import parse_isbn, parse_language
 from src.utils import execute_select, execute_insert_or_update
+from config import HOST_URL, USERNAME, PASSWORD, DB_NAME
 
 if __name__ == '__main__':
     connection_details = dict(
-        host="perlego-prod-db-aurora-cluster.cluster-cewnsnxsdb0o.eu-west-2.rds.amazonaws.com",
-        username="g9bgtldbq6kc9oa2",
-        password="354mznlfz4jwuacr",
-        dbname="perlego_prod_db"
+        host=HOST_URL,
+        username=USERNAME,
+        password=PASSWORD,
+        dbname=DB_NAME,
     )
 
     with open("/home/aviaowl/PycharmProjects/OpenResearchLibraryCOPS/src/output_right.csv") as output:
@@ -19,7 +20,7 @@ if __name__ == '__main__':
     for line in lines:
         line = line.strip()
         record = ast.literal_eval(line)
-        isbn = parse_isbn(record["identifier"])
+        isbn = parse_isbne(record["identifier"])
         language = parse_language(record["language"])
         originals[isbn] = {'language': language}
 
