@@ -8,7 +8,9 @@ import pymysql
 from src.contants import ONIX_DATE_FORMAT
 
 
-def execute_insert_or_update(statement: str, connection_details: dict, logger: Logger = None):
+def execute_insert_or_update(
+    statement: str, connection_details: dict, logger: Logger = None
+):
     with initialise_connection(connection_details) as connection:
         with connection.cursor() as cursor:
             cursor.execute(statement)
@@ -67,7 +69,9 @@ def upload_object_by_path(s3, bucket_name: str, local_path: str, s3_path: str) -
     except Exception as e:
         err_msg = f"Failed to upload file: '{s3_path}' to bucket '{bucket_name}'.\nDetails: {str(e)}"
         raise ValueError(err_msg)
-    print(f"File '{local_path}' was successfully uploaded to bucket '{bucket_name}/{s3_path}'")
+    print(
+        f"File '{local_path}' was successfully uploaded to bucket '{bucket_name}/{s3_path}'"
+    )
 
 
 def delete_local_file(file_name: str) -> None:
@@ -117,7 +121,9 @@ def generate_product_reference(book_format: str, isbn: str) -> str:
     if len(isbn) > 0 and book_format.strip().lower() in ("pdf", "epub"):
         return f"{isbn}.{book_format.strip().lower()}"
     else:
-        print(f"WARNING: wrong input: {book_format, isbn}. Check that isbn is not empty and book format is supported")
+        print(
+            f"WARNING: wrong input: {book_format, isbn}. Check that isbn is not empty and book format is supported"
+        )
         return ""
 
 
@@ -190,23 +196,13 @@ def render_book(book: dict) -> Tuple[dict, dict]:  # pylint: disable=too-many-lo
     sales_rights = dict(countries_included=book["allowed_countries"])
 
     publishing_detail = dict(
-        publisher=publisher,
-        publishing_date=publishing_date,
-        sales_rights=sales_rights,
+        publisher=publisher, publishing_date=publishing_date, sales_rights=sales_rights,
     )
 
     # product supply
     supplier = dict(supplier_name="Open Research Library")
-    price = dict(
-        currency_code="GBP",
-        price_amount="0",
-        price_type="01",
-    )
-    product_supply = dict(
-        supplier=supplier,
-        product_availability="20",
-        price=price,
-    )
+    price = dict(currency_code="GBP", price_amount="0", price_type="01",)
+    product_supply = dict(supplier=supplier, product_availability="20", price=price,)
 
     # final product
     product = dict(
